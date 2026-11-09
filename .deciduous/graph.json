@@ -1,6 +1,378 @@
 {
-  "edges": {},
-  "nodes": {},
+  "nodes": {
+    "goal-tetris-build": {
+      "change_id": "goal-tetris-build",
+      "created_at": "2026-11-09T02:54:12.804632Z",
+      "updated_at": "2026-11-09T03:19:19.315519Z",
+      "node_type": "goal",
+      "status": "completed",
+      "title": "Build Tetris in TypeScript: functional core + imperative shell",
+      "description": "Git-tracked TypeScript Tetris project. Constraints: no any types, strong boundaries, explicit contracts, functional core + imperative shell architecture, packaged for play, and verifiable that it really works.",
+      "metadata": {
+        "branch": "main",
+        "confidence": 90,
+        "prompt": "start a git repo, track things in deciduous, and using no any() types and strong boundaries and explicit contracts, built tetris in Typescript and package it up for play. Make it a functional core and an imperative shell. Be considerate when designing your boundaries. make sure you can verify things really work."
+      }
+    },
+    "opt-rng-in-state": {
+      "change_id": "opt-rng-in-state",
+      "created_at": "2026-11-09T02:54:36.177256Z",
+      "updated_at": "2026-11-09T02:54:36.177256Z",
+      "node_type": "option",
+      "status": "pending",
+      "title": "RNG inside GameState (seeded, data-driven)",
+      "description": "Carry the RNG seed/bag as immutable data inside GameState. transition(state, action) is a total pure function; the whole game is deterministic given (seed, sequence of actions). Makes the core fully testable and replayable."
+    },
+    "opt-rng-shell-injected": {
+      "change_id": "opt-rng-shell-injected",
+      "created_at": "2026-11-09T02:54:43.375677Z",
+      "updated_at": "2026-11-09T02:54:43.375677Z",
+      "node_type": "option",
+      "status": "pending",
+      "title": "RNG callback injected by shell",
+      "description": "Inject a Math.random()/rng callback into the core. Simpler state but breaks totality: transition is no longer a pure function of its arguments, harder to replay or test deterministically."
+    },
+    "opt-time-shell-dt": {
+      "change_id": "opt-time-shell-dt",
+      "created_at": "2026-11-09T02:54:49.543749Z",
+      "updated_at": "2026-11-09T02:54:49.543749Z",
+      "node_type": "option",
+      "status": "pending",
+      "title": "Shell drives time via dt passed into tick",
+      "description": "Shell measures elapsed time and passes a dt/tick into core.transition. Core stays free of Date.now/performance, so gravity is a pure function of accumulated ticks. Testable with fake time."
+    },
+    "dec-pure-randomness": {
+      "change_id": "dec-pure-randomness",
+      "created_at": "2026-11-09T02:54:58.836748Z",
+      "updated_at": "2026-11-09T02:54:58.836748Z",
+      "node_type": "decision",
+      "status": "pending",
+      "title": "Keep randomness pure inside GameState",
+      "description": "Decided the core holds a seeded RNG inside GameState so transition is a total pure function; the shell cannot inject ambient randomness. Enables deterministic tests and replays.",
+      "metadata": {
+        "confidence": 95
+      }
+    },
+    "dec-push-time-across-boundary": {
+      "change_id": "dec-push-time-across-boundary",
+      "created_at": "2026-11-09T02:55:05.641009Z",
+      "updated_at": "2026-11-09T02:55:05.641009Z",
+      "node_type": "decision",
+      "status": "pending",
+      "title": "Push time across the boundary as dt",
+      "description": "Decided the shell measures elapsed time and feeds tick/dt into the core; core never calls Date.now/performance. Gravity becomes a pure function of ticks so tests can run on fake time.",
+      "metadata": {
+        "confidence": 95
+      }
+    },
+    "opt-core-owns-clock": {
+      "change_id": "opt-core-owns-clock",
+      "created_at": "2026-11-09T02:55:24.203961Z",
+      "updated_at": "2026-11-09T02:55:24.203961Z",
+      "node_type": "option",
+      "status": "rejected",
+      "title": "Core owns the clock",
+      "description": "Alternative where the core owns timing internally. Rejected: the core would call Date.now/performance, breaking determinism and testability."
+    },
+    "act-build-core": {
+      "change_id": "act-build-core",
+      "created_at": "2026-11-09T02:56:36.057887Z",
+      "updated_at": "2026-11-09T03:19:08.117639Z",
+      "node_type": "action",
+      "status": "completed",
+      "title": "Build functional core (src/core)",
+      "description": "Implement the pure engine: seeded RNG (data-driven), 7-bag, board ops, SRS rotation with wall kicks, collision, scoring, gravity, and a total transition reducer. Strict tsconfig, no any.",
+      "metadata": {
+        "branch": "main",
+        "confidence": 80,
+        "files": [
+          "src/core/constants.ts",
+          "src/core/types.ts",
+          "src/core/rng.ts",
+          "src/core/board.ts",
+          "src/core/pieces.ts",
+          "src/core/rotation.ts",
+          "src/core/collision.ts",
+          "src/core/scoring.ts",
+          "src/core/reducer.ts",
+          "src/core/index.ts"
+        ]
+      }
+    },
+    "act-build-shell": {
+      "change_id": "act-build-shell",
+      "created_at": "2026-11-09T03:02:39.392237Z",
+      "updated_at": "2026-11-09T03:19:10.966906Z",
+      "node_type": "action",
+      "status": "completed",
+      "title": "Build imperative shell (src/shell)",
+      "description": "Imperative shell importing ONLY from core/index: canvas renderer with ghost+preview+HUD, keyboard input mapping, rAF loop that dispatches one tick per gravity row using gravityDelayMs. Holds mutable subscriptions; all logic delegated to pure core.",
+      "metadata": {
+        "branch": "main",
+        "confidence": 80,
+        "files": [
+          "src/shell/render.ts",
+          "src/shell/input.ts",
+          "src/shell/controller.ts",
+          "src/main.ts",
+          "public/index.html"
+        ]
+      }
+    },
+    "89214b53-73e5-4e87-b304-34020078c616": {
+      "change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "created_at": "2026-11-09T03:19:19.311684Z",
+      "updated_at": "2026-11-09T03:19:19.311684Z",
+      "node_type": "outcome",
+      "status": "completed",
+      "title": "Tetris packaged and verified playable",
+      "description": "Full verification chain passed: tsc --noEmit clean; 28 node:test tests green (determinism, board, rotation, reducer, boundary scan, DOM-stub integration); esbuild bundle 8.7kb; static server returns 200 for index.html and dist/bundle.js with correct content types and blocks traversal; main.ts boots the shell against a stubbed DOM and survives 30 hard drops plus pause. Functional core imports nothing outside src/core; shell/entry import the core only through index.ts.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "58a6446a-3dc9-422c-a6ba-9cf47cbfbc27": {
+      "change_id": "58a6446a-3dc9-422c-a6ba-9cf47cbfbc27",
+      "created_at": "2026-11-09T03:19:19.316787Z",
+      "updated_at": "2026-11-09T03:19:19.316787Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Crafted near-full boards can clear >4 rows at once; scoreForClear now clamps to the four-line value so the total reducer cannot throw.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "3bbf566a-7317-49cd-914f-9e7ffaa9f65d": {
+      "change_id": "3bbf566a-7317-49cd-914f-9e7ffaa9f65d",
+      "created_at": "2026-11-09T03:19:19.318993Z",
+      "updated_at": "2026-11-09T03:19:19.318993Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Unary minus of a zero spawn top-row produced -0, which broke identity assertions; spawnOrigin now uses 0 - topRow.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "bcf15982-64d6-4162-915b-2a1367d9ac7f": {
+      "change_id": "bcf15982-64d6-4162-915b-2a1367d9ac7f",
+      "created_at": "2026-11-09T03:19:19.320941Z",
+      "updated_at": "2026-11-09T03:19:19.320941Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Browser entry can be e2e-tested headlessly by stubbing HTMLCanvasElement/document/window/rAF then dynamic-importing main.ts, which boots synchronously when document.readyState is complete.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "52d2af9c-2b13-405e-8554-309424098aeb": {
+      "change_id": "52d2af9c-2b13-405e-8554-309424098aeb",
+      "created_at": "2026-11-09T03:19:19.323596Z",
+      "updated_at": "2026-11-09T03:19:19.323596Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Node's assert.deepStrictEqual treats +0 and -0 as unequal, so geometry assertions must normalize -0.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "e44c7c76-d469-4ba5-9b01-d18281d97beb": {
+      "change_id": "e44c7c76-d469-4ba5-9b01-d18281d97beb",
+      "created_at": "2026-11-09T03:19:23.706337Z",
+      "updated_at": "2026-11-09T03:19:23.706337Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Totality of the reducer survived a crafted 20-line board",
+      "description": "A top-out test that filled the whole field forced clearFullRows to report 20 cleared lines, which made the old scoreForClear throw RangeError. The pure core must stay total, so scoreForClear now clamps the count onto the four-line value instead of throwing. The degenerate full-board test was replaced with a realistic one-column-shaft top-out that never clears a row.",
+      "metadata": {
+        "branch": "main"
+      }
+    },
+    "f9743eb6-166c-4db5-900a-bc620a4b0d32": {
+      "change_id": "f9743eb6-166c-4db5-900a-bc620a4b0d32",
+      "created_at": "2026-11-09T03:19:31.475644Z",
+      "updated_at": "2026-11-09T03:19:31.475644Z",
+      "node_type": "observation",
+      "status": "active",
+      "title": "Boundary scan must read code, not comments",
+      "description": "The boundary scan initially failed on src/core/index.ts for \"Math.random\" because that string only appears in a doc comment. A pure-core rule must inspect code, not prose, so the scanner strips block and line comments before matching forbidden ambient identifiers and the ../ escape pattern. A matching shell guard asserts that src/shell/* and src/main.ts import the core only via ../core/index.ts, keeping the single boundary enforced by tests rather than convention.",
+      "metadata": {
+        "branch": "main"
+      }
+    }
+  },
+  "edges": {
+    "d18bdaa2-27e0-4024-82ec-31d5e35cf117": {
+      "edge_id": "d18bdaa2-27e0-4024-82ec-31d5e35cf117",
+      "created_at": "2026-11-09T02:54:36.179914Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "opt-rng-in-state",
+      "weight": 1,
+      "rationale": "Core purity requires removing ambient randomness."
+    },
+    "f2e106ea-7c70-4411-a51f-3f344a572fb1": {
+      "edge_id": "f2e106ea-7c70-4411-a51f-3f344a572fb1",
+      "created_at": "2026-11-09T02:54:43.378584Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "opt-rng-shell-injected",
+      "weight": 1,
+      "rationale": "Alternative considered for RNG."
+    },
+    "7d821ce8-528d-4849-82b9-8a1297cbbdce": {
+      "edge_id": "7d821ce8-528d-4849-82b9-8a1297cbbdce",
+      "created_at": "2026-11-09T02:54:49.545876Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "opt-time-shell-dt",
+      "weight": 1,
+      "rationale": "Core purity requires removing ambient time."
+    },
+    "0f7ba712-78ec-4d8c-9a03-fbecef24c350": {
+      "edge_id": "0f7ba712-78ec-4d8c-9a03-fbecef24c350",
+      "created_at": "2026-11-09T02:54:58.839499Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "dec-pure-randomness",
+      "weight": 1,
+      "rationale": "Chose RNG-in-state over shell-injected callback to keep the core a pure function of its arguments and fully deterministic."
+    },
+    "1aa3ce55-3836-4989-a0dd-f6548f52bb0e": {
+      "edge_id": "1aa3ce55-3836-4989-a0dd-f6548f52bb0e",
+      "created_at": "2026-11-09T02:55:05.644936Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "dec-push-time-across-boundary",
+      "weight": 1,
+      "rationale": "Chose shell-driven dt over a core-owned clock to keep the core free of ambient time and deterministically testable."
+    },
+    "7c41d1ac-4d15-482c-9e63-aaebc009c662": {
+      "edge_id": "7c41d1ac-4d15-482c-9e63-aaebc009c662",
+      "created_at": "2026-11-09T02:55:10.770709Z",
+      "edge_type": "chosen",
+      "from_change_id": "dec-pure-randomness",
+      "to_change_id": "opt-rng-in-state",
+      "weight": 1,
+      "rationale": "Chosen: total pure transition, deterministic replay."
+    },
+    "7109a853-a275-49ef-841d-eecfe2abf399": {
+      "edge_id": "7109a853-a275-49ef-841d-eecfe2abf399",
+      "created_at": "2026-11-09T02:55:14.427744Z",
+      "edge_type": "rejected",
+      "from_change_id": "dec-pure-randomness",
+      "to_change_id": "opt-rng-shell-injected",
+      "weight": 1,
+      "rationale": "Rejected: breaks totality of transition, ambient randomness leaks into core."
+    },
+    "9c7a02cf-0f0e-4926-80e8-53da7dc10167": {
+      "edge_id": "9c7a02cf-0f0e-4926-80e8-53da7dc10167",
+      "created_at": "2026-11-09T02:55:24.206191Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "opt-core-owns-clock",
+      "weight": 1,
+      "rationale": "Alternative considered for time handling."
+    },
+    "d05b11dc-8cc2-48b6-a911-4c93db41e764": {
+      "edge_id": "d05b11dc-8cc2-48b6-a911-4c93db41e764",
+      "created_at": "2026-11-09T02:55:28.684973Z",
+      "edge_type": "chosen",
+      "from_change_id": "dec-push-time-across-boundary",
+      "to_change_id": "opt-time-shell-dt",
+      "weight": 1,
+      "rationale": "Chosen: core free of ambient time, fake-time tests."
+    },
+    "689a76a6-7786-424c-9f65-267664c6d064": {
+      "edge_id": "689a76a6-7786-424c-9f65-267664c6d064",
+      "created_at": "2026-11-09T02:55:32.830992Z",
+      "edge_type": "rejected",
+      "from_change_id": "dec-push-time-across-boundary",
+      "to_change_id": "opt-core-owns-clock",
+      "weight": 1,
+      "rationale": "Rejected: core would call Date.now/performance, breaking determinism."
+    },
+    "0278d484-45d1-4055-8662-7c32d7d915ef": {
+      "edge_id": "0278d484-45d1-4055-8662-7c32d7d915ef",
+      "created_at": "2026-11-09T02:56:36.060935Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "act-build-core",
+      "weight": 1,
+      "rationale": "Implementing the functional core under the chosen pure-randomness/pure-time boundary."
+    },
+    "9e407c5d-7b9b-443e-bb2b-d3d20374d0c3": {
+      "edge_id": "9e407c5d-7b9b-443e-bb2b-d3d20374d0c3",
+      "created_at": "2026-11-09T03:02:39.395284Z",
+      "edge_type": "leads_to",
+      "from_change_id": "goal-tetris-build",
+      "to_change_id": "act-build-shell",
+      "weight": 1,
+      "rationale": "Building the imperative shell behind the core boundary."
+    },
+    "d7d706f9-16d1-4e76-b9f8-657316f9189a": {
+      "edge_id": "d7d706f9-16d1-4e76-b9f8-657316f9189a",
+      "created_at": "2026-11-09T03:19:19.314515Z",
+      "edge_type": "leads_to",
+      "from_change_id": "act-build-shell",
+      "to_change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "weight": 1,
+      "rationale": "Result"
+    },
+    "33dfb4a7-8278-4a5a-9851-d4023de58614": {
+      "edge_id": "33dfb4a7-8278-4a5a-9851-d4023de58614",
+      "created_at": "2026-11-09T03:19:19.318426Z",
+      "edge_type": "leads_to",
+      "from_change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "to_change_id": "58a6446a-3dc9-422c-a6ba-9cf47cbfbc27",
+      "weight": 1,
+      "rationale": "Lesson learned"
+    },
+    "0a108ce6-560a-4048-83aa-df3aa7eb8e48": {
+      "edge_id": "0a108ce6-560a-4048-83aa-df3aa7eb8e48",
+      "created_at": "2026-11-09T03:19:19.320409Z",
+      "edge_type": "leads_to",
+      "from_change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "to_change_id": "3bbf566a-7317-49cd-914f-9e7ffaa9f65d",
+      "weight": 1,
+      "rationale": "Lesson learned"
+    },
+    "bc2a5e2e-3dff-476e-9121-150fb6156c27": {
+      "edge_id": "bc2a5e2e-3dff-476e-9121-150fb6156c27",
+      "created_at": "2026-11-09T03:19:19.322626Z",
+      "edge_type": "leads_to",
+      "from_change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "to_change_id": "bcf15982-64d6-4162-915b-2a1367d9ac7f",
+      "weight": 1,
+      "rationale": "Lesson learned"
+    },
+    "8d5ef474-6097-4978-8bc0-b4bebd6debad": {
+      "edge_id": "8d5ef474-6097-4978-8bc0-b4bebd6debad",
+      "created_at": "2026-11-09T03:19:19.325052Z",
+      "edge_type": "leads_to",
+      "from_change_id": "89214b53-73e5-4e87-b304-34020078c616",
+      "to_change_id": "52d2af9c-2b13-405e-8554-309424098aeb",
+      "weight": 1,
+      "rationale": "Lesson learned"
+    },
+    "2eb55790-bb42-4230-84d4-a1430d6c3663": {
+      "edge_id": "2eb55790-bb42-4230-84d4-a1430d6c3663",
+      "created_at": "2026-11-09T03:19:23.709002Z",
+      "edge_type": "leads_to",
+      "from_change_id": "act-build-core",
+      "to_change_id": "e44c7c76-d469-4ba5-9b01-d18281d97beb",
+      "weight": 1,
+      "rationale": "Observation from context"
+    },
+    "861764de-99d0-474d-b337-11363c6032cd": {
+      "edge_id": "861764de-99d0-474d-b337-11363c6032cd",
+      "created_at": "2026-11-09T03:19:31.478660Z",
+      "edge_type": "leads_to",
+      "from_change_id": "act-build-core",
+      "to_change_id": "f9743eb6-166c-4db5-900a-bc620a4b0d32",
+      "weight": 1,
+      "rationale": "Observation from context"
+    }
+  },
   "tags": {},
   "themes": {},
   "version": 1

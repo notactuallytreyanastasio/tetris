@@ -1,0 +1,20 @@
+{
+  "name": "tetris",
+  "version": "1.0.0",
+  "description": "Tetris - functional core, imperative shell, zero `any`.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test ./test/*.test.ts",
+    "build": "node build.ts",
+    "start": "node serve.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.0"
+  }
+}

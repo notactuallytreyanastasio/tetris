@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetris</title>
+    <style>
+      :root { color-scheme: dark; }
+      html, body {
+        margin: 0;
+        height: 100%;
+        background: #020617;
+        color: #e2e8f0;
+        font-family: "Courier New", monospace;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px;
+      }
+      h1 { font-size: 22px; letter-spacing: 4px; margin: 0; }
+      #board {
+        background: #0b1120;
+        border: 1px solid #1e293b;
+        border-radius: 6px;
+        image-rendering: pixelated;
+        touch-action: none;
+      }
+      .keys { font-size: 12px; color: #94a3b8; text-align: center; line-height: 1.8; }
+      .keys b { color: #cbd5e1; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>TETRIS</h1>
+      <canvas id="board" width="0" height="0"></canvas>
+      <p class="keys">
+        <b>←/→</b> move · <b>↑ / X</b> rotate cw · <b>Z</b> rotate ccw ·
+        <b>↓</b> soft drop · <b>Space</b> hard drop · <b>P</b> pause · <b>R</b> restart
+      </p>
+    </main>
+    <script src="/dist/bundle.js"></script>
+  </body>
+</html>
